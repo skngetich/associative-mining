@@ -1,0 +1,83 @@
+---
+title: "apriori-rule"
+author: "Stephen K. Ng'etich"
+date: "8/11/2021"
+output: pdf_document
+---
+
+## Prerequisite
+
+### Linux program
+R-base
+build-essential
+
+### R Packages
+
+|package|Function|
+|.......|........|
+|arules|provides the infrastructure for representing, manipulating, and analyzing transaction data and patterns.|
+|arulesViz|package is used for visualizing Association Rules and Frequent Itemsets. It extends the package `arules` with various visualization techniques for association rules and itemsets. The package also includes several interactive visualizations for rule exploration.|
+|RColorBrewer|ColorBrewer Palette which provides color schemes for maps and other graphics.|
+
+
+`devtools::install_github("mhahsler/arulesViz")` to install aruleViz library
+
+
+```{r}
+
+library(arules)
+library(arulesViz)
+library(RColorBrewer)
+
+
+```
+
+
+
+#Assosiation Mining Rule
+## Apriori Mining rule
+
+### Load Dataset
+
+```{R}
+
+data_set = read.csv('dataset.csv')
+
+
+```
+### Applying apriori() function
+```{R}
+rules <- apriori(data_set, parameter = list(supp = 0.01, conf = 0.2))
+
+
+
+
+```
+
+### Applying inspect() function
+
+```{R}
+inspect(rules[1:10])
+
+```
+
+### Using itemFrequencyPlot() function
+
+```{R}
+
+arules::itemFrequencyPlot(Groceries, topN = 20, 
+                          col = brewer.pal(8, 'Pastel2'),
+                          main = 'Relative Item Frequency Plot',
+                          type = "relative",
+                          ylab = "Item Frequency (Relative)")
+
+```
+
+```{R}
+#sorted_rules sort(rules[], by="support", decreasing = TRUE)
+inspect(sorted_rules)
+plot(rules[1:25], method = 'graph', engine = 'interactive', shading = "confidence")
+
+
+
+```
