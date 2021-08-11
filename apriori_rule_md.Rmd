@@ -2,7 +2,7 @@
 title: "apriori-rule"
 author: "Stephen K. Ng'etich"
 date: "8/11/2021"
-output: pdf_document
+output: html_document
 ---
 
 ## Prerequisite
@@ -41,13 +41,16 @@ library(RColorBrewer)
 
 ```{R}
 
-data_set = read.csv('dataset.csv')
+#data_set = read.csv('dataset.csv')
+trans<-read.transactions(file='dataset.csv', format="basket", sep="," ,header= TRUE)
+inspect(head(trans,3))
 
 
 ```
 ### Applying apriori() function
 ```{R}
-rules <- apriori(data_set, parameter = list(supp = 0.01, conf = 0.2))
+#rules <- apriori(trans, parameter = list(supp = 0.0001, conf = 0.5))
+rules<-apriori(trans,parameter=list(support=0.06, confidence=0.5,minlen=3,maxlen=6)) 
 
 
 
@@ -57,7 +60,7 @@ rules <- apriori(data_set, parameter = list(supp = 0.01, conf = 0.2))
 ### Applying inspect() function
 
 ```{R}
-inspect(rules[1:10])
+inspect(rules[20:30])
 
 ```
 
@@ -65,7 +68,7 @@ inspect(rules[1:10])
 
 ```{R}
 
-arules::itemFrequencyPlot(Groceries, topN = 20, 
+arules::itemFrequencyPlot(trans, topN = 20, 
                           col = brewer.pal(8, 'Pastel2'),
                           main = 'Relative Item Frequency Plot',
                           type = "relative",
@@ -74,10 +77,12 @@ arules::itemFrequencyPlot(Groceries, topN = 20,
 ```
 
 ```{R}
-#sorted_rules sort(rules[], by="support", decreasing = TRUE)
+sorted_rules = sort(rules, by="support", decreasing = TRUE)
 inspect(sorted_rules)
-plot(rules[1:25], method = 'graph', engine = 'interactive', shading = "confidence")
-
+#plot(sorted_rules[1:20], method = 'graph', engine = 'interactive', shading = "confidence")
+plot(sorted_rules[1:20], method = "grouped matrix", engine = "htmlwidget")
+plot(sorted_rules[1:20], method = "matrix", engine = "htmlwidget")
+plot(sorted_rules[1:20], method = "graph", engine = "htmlwidget", data=trans)
 
 
 ```
